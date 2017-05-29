@@ -1,0 +1,3 @@
+<mapper namespace="com.bear.dao.CarDao">
+  
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>  
+<configuration>  
+  
+    <!-- ch.qos.logback.core.ConsoleAppender 控制台输出 -->  
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">  
+        <encoder>  
+            <pattern>[%-5level] %d{HH:mm:ss.SSS} [%thread] %logger{36} - %msg%n  
+            </pattern>  
+        </encoder>  
+    </appender>  
+  
+    <!-- ch.qos.logback.core.rolling.RollingFileAppender 文件日志输出 -->  
+    <appender name="file"  
+        class="ch.qos.logback.core.rolling.RollingFileAppender">  
+        <Encoding>UTF-8</Encoding>  
+        <File>${catalina.base}/log/bear_bike.log</File>  
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+            <FileNamePattern>${catalina.base}/log/bear_bike-%d{yyyy-MM-dd}.log  
+            </FileNamePattern>  
+            <MaxHistory>10</MaxHistory>  
+            <TimeBasedFileNamingAndTriggeringPolicy  
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">  
+                <MaxFileSize>5MB</MaxFileSize>  
+            </TimeBasedFileNamingAndTriggeringPolicy>  
+        </rollingPolicy>  
+        <layout class="ch.qos.logback.classic.PatternLayout">  
+            <pattern>[%-5level] %d{HH:mm:ss.SSS} [%thread] %logger{36} - %msg%n  
+            </pattern>  
+        </layout>  
+    </appender>  
+  <logger name="java.sql.PreparedStatement" value="DEBUG" />    
+    <logger name="java.sql.Connection" value="DEBUG" />    
+    <logger name="java.sql.Statement" value="DEBUG" />    
+    <logger name="com.ibatis" value="DEBUG" />    
+    <logger name="com.ibatis.common.jdbc.SimpleDataSource" value="DEBUG" />    
+    <logger name="com.ibatis.common.jdbc.ScriptRunner" level="DEBUG"/>    
+    <logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" value="DEBUG" />
+    <!-- 日志级别 -->  
+    <root>  
+        <!-- 定义了ERROR和INFO级别的日志，分别在FILE文件和控制台输出 -->  
+        <level value="error" />  
+        <level value="info" />  
+         <level value="DEBUG" /> 
+        <appender-ref ref="file" />   
+        <appender-ref ref="console" />  
+    </root>  
+  
+  
+</configuration>  

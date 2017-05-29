@@ -1,0 +1,37 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bear.dao.CarDao">
+  
+	
+	<select id="queryCarList"  resultType="com.bear.entity.CarStock">
+		SELECT tc.id,tc.car_no,tc.car_status,tc.station_id,ts.site_name from t_car_stock tc LEFT JOIN t_site ts ON ts.id = tc.station_id 
+		WHERE tc.station_id = #{siteId}
+		<if test ="carNo !=null" >
+			and tc.car_no = #{carNo}
+		</if> 
+		limit #{page},#{pageSize}
+	</select>
+	
+	<select id="queryCarListCount"  resultType="int">
+		SELECT count(*) from t_car_stock tc LEFT JOIN t_site ts ON ts.id = tc.station_id 
+		WHERE tc.station_id = #{siteId}
+		<if test ="carNo !=null" >
+			and tc.car_no = #{carNo}
+		</if> 
+	</select>
+	
+	<select id="queryCarNoExists"  resultType="int">
+		SELECT count(id) from t_car_stock tc  
+		WHERE  tc.car_no = #{carNo}
+	</select>
+	
+	<select id="queryCarDetail" parameterType="int" resultType="com.bear.entity.CarStock">
+		select * from t_car_stock where id = #{id}
+	</select>
+	
+	<insert id="insertCar" useGeneratedKeys="true" keyProperty="id" >
+		insert  t_car_stock (car_no,station_id) value(#{carNo},#{stationId})
+	</insert>
+  
+</mapper>

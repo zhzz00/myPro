@@ -1,0 +1,16 @@
+package com.bear.dao;
+
+import java.util.List;
+import java.util.Map;
+import com.bear.entity.CarStock;
+import com.bear.entity.Site;
+
+public interface SiteDao {
+
+	Site querySiteInfo(int siteId);
+
+	List<CarStock> queryCarBySite(Map<String,Object> qm);
+
+	int queryCarBySiteCount(Map<String,Object> qm);
+
+}

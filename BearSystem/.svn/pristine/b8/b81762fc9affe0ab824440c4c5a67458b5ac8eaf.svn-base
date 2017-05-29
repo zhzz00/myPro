@@ -1,0 +1,7 @@
+package com.bear.dao;
+
+public interface AdminDao {
+
+
+	
+}

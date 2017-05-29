@@ -1,0 +1,8 @@
+package com.bear.dao;
+
+import com.bear.entity.SiteUser;
+
+public interface SiteUserDao {
+
+	SiteUser querySiteUser(String siteUserName,String siteUserPwd);
+}

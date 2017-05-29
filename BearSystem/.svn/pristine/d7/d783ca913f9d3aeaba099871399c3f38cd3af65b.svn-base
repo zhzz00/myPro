@@ -1,0 +1,94 @@
+package com.bear.service.site.impl;
+
+
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.bear.dao.SiteDao;
+import com.bear.dto.QueryCarBySiteReq;
+import com.bear.dto.QueryCarBySiteRsp;
+import com.bear.dto.QuerySiteInfoReq;
+import com.bear.dto.QuerySiteInfoRsp;
+import com.bear.entity.CarStock;
+import com.bear.entity.Site;
+import com.bear.exception.HandelException;
+import com.google.common.collect.Maps;
+
+
+/**
+ * 站点实现类
+ * @author lzx
+ * @since 2017-04-17
+ */
+@Service("siteService")
+public class SiteServiceImpl  implements ISiteService {
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
+	private SiteDao siteDao;
+	
+	/**
+	 * 查询站点信息
+	 */
+	@Override
+	public QuerySiteInfoRsp querySiteInfo(QuerySiteInfoReq req) throws HandelException  {
+
+		QuerySiteInfoRsp rsp = null;
+		try {
+			rsp = new QuerySiteInfoRsp();
+			int siteId = req.getSiteId();
+			
+			// 根据站点ID查询站点信息
+			Site site = siteDao.querySiteInfo(siteId);
+			if(site == null){
+				throw new HandelException("未找到站点信息！", -10000);
+				//BeanUtils.copyProperties(site, rsp,new String[]{});
+			}
+			rsp.setSite(site);
+		}catch(HandelException e){
+			throw e;
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.error("query Site exception", e);
+			throw new HandelException("查询站点信息异常！", -10000);
+		}
+		return rsp;
+	}
+
+	/**
+	 * 查询站点可用车辆
+	 */
+	@Override
+	public QueryCarBySiteRsp queryCarBySite(QueryCarBySiteReq req) {
+		
+		QueryCarBySiteRsp rsp = null;
+		try {
+			rsp = new QueryCarBySiteRsp();
+			
+			Map<String, Object> qm = Maps.newHashMap();
+			qm.put("page", (req.getPage()-1) * req.getPageSize());
+			qm.put("pageSize", req.getPageSize());
+			qm.put("siteId", req.getSiteId());
+			List<CarStock> carList =  siteDao.queryCarBySite(qm);
+			int count = siteDao.queryCarBySiteCount(qm);
+			
+			if(carList == null){
+				throw new HandelException("无可用车辆！", -10000);
+			}
+			rsp.setCarStocks(carList);
+			rsp.setRows(count);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.error("query Site exception", e);
+			throw new HandelException("查询车辆信息异常！", -10000);
+		}
+		return rsp;
+	}
+	
+}

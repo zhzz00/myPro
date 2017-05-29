@@ -1,0 +1,33 @@
+package com.bear.service.site;
+
+import com.bear.dto.QueryCarBySiteReq;
+import com.bear.dto.QueryCarBySiteRsp;
+import com.bear.dto.QuerySiteInfoReq;
+import com.bear.dto.QuerySiteInfoRsp;
+
+/**
+ * <p>
+ *  服务类
+ * </p>
+ *
+ * @author xiao
+ * @since 2017-04-17
+ */
+public interface ISiteService {
+	
+	/**
+	 * 查询站点信息
+	 * @param req
+	 * @return
+	 */
+	QuerySiteInfoRsp querySiteInfo(QuerySiteInfoReq req);
+
+	/**
+	 * 查询当前站点可用车辆
+	 * @param req
+	 * @return
+	 */
+	QueryCarBySiteRsp queryCarBySite(QueryCarBySiteReq req);
+	
+	
+}

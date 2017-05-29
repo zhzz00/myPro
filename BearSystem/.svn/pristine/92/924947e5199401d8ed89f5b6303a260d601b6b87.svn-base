@@ -1,0 +1,79 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bear.dao.SiteDao">
+
+	<!-- 获取站点信息 -->
+	<select id="querySiteInfo" parameterType="int" resultType="com.bear.entity.Site">
+		SELECT
+        	id, site_name,site_address,longitude,latitude,province,city,area,street,
+         	site_status,create_time,tel,imgurl,
+         	(select disname from t_district where disid = t.province) provinceName,
+			(select disname from t_district where disid = t.city) cityName,
+			(select disname from t_district where disid = t.area) areaName,
+			(select disname from t_district where disid = t.street) streetName
+        FROM
+        t_site t WHERE id = #{id}
+	</select>
+	
+	<!-- 根据站点查询可用车辆列表 -->
+	<select id="queryCarBySite"  resultType="com.bear.entity.CarStock">
+		SELECT tc.id,tc.car_no,tc.car_status,tc.station_id,ts.site_name from t_car_stock tc LEFT JOIN t_site ts ON ts.id = tc.station_id 
+		WHERE tc.station_id = #{siteId} and tc.car_status = 0 
+		limit #{page},#{pageSize}
+	</select>
+	<!-- 根据站点查询可用车辆数量 -->
+	<select id="queryCarBySiteCount"  resultType="int">
+		SELECT count(*) from t_car_stock tc LEFT JOIN t_site ts ON ts.id = tc.station_id 
+		WHERE tc.station_id = #{siteId} and tc.car_status = 0 
+	</select>
+	
+	<!-- 查询站点列表 -->
+	<select id="querySiteList"  resultType="com.bear.entity.Site">
+		SELECT
+        	id, site_name,site_address,longitude,latitude,province,city,area,street,
+         	site_status,create_time,tel,imgurl,
+         	(select disname from t_district where disid = t.province) provinceName,
+			(select disname from t_district where disid = t.city) cityName,
+			(select disname from t_district where disid = t.area) areaName,
+			(select disname from t_district where disid = t.street) streetName
+        FROM
+        t_site t where 1=1
+        <if test="siteName!=null">
+        	and site_name = #{siteName}
+        </if>
+        <if test="siteStatus!=null">
+        	and site_status = #{siteStatus}
+        </if>
+        limit #{page},#{pageSize} 
+     </select>   
+	<!-- 查询站点列表数量 -->
+	<select id="querySiteCount"  resultType="int">
+		SELECT count(*) FROM t_site t where 1=1
+        <if test="siteName!=null">
+        	and site_name = #{siteName}
+        </if>
+        <if test="siteStatus!=null">
+        	and site_status = #{siteStatus}
+        </if>
+    </select>     
+	<!-- 添加站点 -->
+	<insert id="addSite" useGeneratedKeys="true" keyProperty="id">
+		insert t_site(site_name,site_address,longitude,latitude,province,city,area,street,tel,imgurl)
+		value(#{siteName},#{siteAddress},#{longitude},#{latitude},#{province},#{city},#{area},#{street},#{tel},#{imgUrl})
+	</insert>
+	
+	<!-- 编辑站点 -->
+	<update id="updateSite">
+		update t_site set site_name=#{siteName},site_address=#{siteAddress},longitude=#{longitude},
+		latitude=#{latitude},province=#{province},
+		city=#{city},area=#{area},street=#{street},tel=#{tel},imgurl=#{imgUrl}
+		where id =#{id}
+	</update>
+	
+	<!-- 添加站点用户 -->
+	<insert id="addSiteUser" useGeneratedKeys="true" keyProperty="id">
+		insert t_site_user (site_user_name,site_user_pwd,site_id)
+		value(#{siteUserName},#{siteUserPwd},#{siteId})
+	</insert>
+</mapper>

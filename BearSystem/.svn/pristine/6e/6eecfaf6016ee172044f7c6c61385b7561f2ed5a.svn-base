@@ -1,0 +1,31 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bear.dao.SiteDao">
+
+	<select id="querySiteInfo" parameterType="int" resultType="com.bear.entity.Site">
+		SELECT
+        	id, site_name,site_address,longitude,latitude,province,city,area,street,
+         	site_status,create_time,tel,
+         	(select disname from t_district where disid = t.province) provinceName,
+			(select disname from t_district where disid = t.city) cityName,
+			(select disname from t_district where disid = t.area) areaName,
+			(select disname from t_district where disid = t.street) streetName
+        FROM
+        t_site t WHERE id = #{id}
+	</select>
+	
+	<select id="queryCarBySite"  resultType="com.bear.entity.Site">
+		SELECT * from t_car_stock tc LEFT JOIN t_site ts ON ts.id = tc.station_id 
+		WHERE tc.station_id = #{siteId} and tc.car_status = 0 
+		limit #{page},#{pageSize}
+	</select>
+	
+	<select id="queryCarBySiteCount"  resultType="int">
+		SELECT count(*) from t_car_stock tc LEFT JOIN t_site ts ON ts.id = tc.station_id 
+		WHERE tc.station_id = #{siteId} and tc.car_status = 0 
+	</select>
+	
+	
+  
+</mapper>
